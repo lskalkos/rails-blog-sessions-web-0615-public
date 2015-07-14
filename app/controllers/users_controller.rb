@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:show, :edit]
+  skip_before_action :authorize, only: [:new, :create]
 
   def index
     @users = User.all
@@ -14,11 +15,16 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
-    if @user.save
-      redirect_to user_path(@user), :notice => "Thank you for signing up!"
+    @user.save!
+
+    if @user.authenticate(user_params[:password])
+      session[:user_id] = @user.id
+      redirect_to welcome_path, :notice => "Hello, #{@user.name}!"
     else
-      render :new
+      flash.now.alert = "Invalid email or password"
+      render "new"
     end
+
   end
 
   private
@@ -27,6 +33,6 @@ class UsersController < ApplicationController
     end
 
     def user_params
-      params.require(:user).permit(:name)
+      params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
 end

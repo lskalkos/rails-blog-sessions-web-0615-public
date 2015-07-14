@@ -11,3 +11,8 @@
  *= require_self
  *= require_tree .
  */
+
+nav {
+    float: right;
+    margin-right: 20%;
+}

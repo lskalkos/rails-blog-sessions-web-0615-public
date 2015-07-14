@@ -1,0 +1,20 @@
+<h1>Welcome to the best blog application in the world.</h1>
+
+<% if flash[:notice] %>
+<%= flash[:notice] %>
+<% end %>
+
+<% if user_logged_in? %>
+    <p>Your posts are:</p>
+    <% current_user.posts.each do |post| %>
+        <a href="/posts/<%= post.id %>" id="<%= post.name %>"><%= post.name %></a>
+    <% end %>
+<% else %>
+    <p>Log in to edit or delete your Post</p>
+    <p>Or you can checkout/read all the posts!</p>
+    <% @posts.each do |post| %>
+        <a href="/posts/<%= post.id %>" id="<%= post.name %>"><%= post.name %></a>
+    <% end %>
+<% end %>
+
+
